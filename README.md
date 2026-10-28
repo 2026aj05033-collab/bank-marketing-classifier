@@ -1,9 +1,24 @@
-# 🏦 Term Deposit Predictor — ML Assignment 2
+# Term Deposit Predictor - Machine Learning Assignment II
 
 End-to-end classification project: five ML models trained on the UCI Bank Marketing dataset (41,188 records), evaluated on a held-out test set, and served through an interactive Streamlit app.
 
+- **Submitted by:** Sabareeshwaran K
+- **BITS ID:** 2026AJ05033
+- **Programme:** M.Tech (Artificial Intelligence and Machine Learning), BITS Pilani WILP
 - **GitHub repository:** https://github.com/2026aj05033-collab/bank-marketing-classifier
-- **Live Streamlit app:** `<paste your Streamlit Community Cloud link here>`
+- **Live Streamlit app:** https://bank-marketing-classifier-2026aj05033.streamlit.app/
+
+## Project summary
+
+| Item | Implementation |
+|---|---|
+| Task | Binary classification of term-deposit subscription (`yes` / `no`) |
+| Dataset | UCI Bank Marketing, 41,188 records |
+| Input features | 19 raw features; call `duration` excluded to prevent leakage |
+| Models | Logistic Regression, Decision Tree, KNN, Gaussian Naive Bayes, Linear SVM |
+| Evaluation | Accuracy, AUC, Precision, Recall, F1 and MCC |
+| Validation | Stratified 80/20 hold-out split; 5-fold stratified CV for tuning |
+| Deployment | Public Streamlit Community Cloud app loading saved pipelines only |
 
 ---
 
@@ -42,6 +57,20 @@ A Portuguese bank runs phone-based marketing campaigns to sell term deposits. Mo
 
 **Preprocessing:** imputation (safety net) → `StandardScaler` for numeric columns → `OneHotEncoder` for categorical columns. Data split 80/20 (stratified, `random_state=42`): **32,950 training rows, 8,238 test rows** (`test_data.csv`). Hyper-parameters were tuned with 5-fold stratified cross-validation on the training split only, optimising F1 because of the class imbalance.
 
+### End-to-end workflow
+
+```mermaid
+flowchart LR
+	A[UCI bank data] --> B[Clean and engineer features]
+	B --> C[Stratified 80/20 split]
+	C --> D[5-fold CV on training set]
+	D --> E[Save five fitted pipelines]
+	C --> F[Held-out test_data.csv]
+	E --> G[Streamlit app]
+	F --> G
+	G --> H[Metrics, diagnostics and exports]
+```
+
 ## c. GitHub repository
 
 https://github.com/2026aj05033-collab/bank-marketing-classifier
@@ -79,6 +108,17 @@ All five models are scikit-learn pipelines (preprocessing + classifier) trained 
 | Naive Bayes (Gaussian) | var_smoothing = 0.01 |
 | Support Vector Machine | Linear SVM (`LinearSVC`), C = 0.01, no class weighting; probabilities via `CalibratedClassifierCV` |
 
+### Evaluation metrics
+
+| Metric | What it measures | Why it matters here |
+|---|---|---|
+| Accuracy | Share of all predictions that are correct | Included for completeness, but inflated by the majority `no` class |
+| AUC | Ranking quality across all classification thresholds | Measures how well a model prioritises likely subscribers |
+| Precision | Correct subscriptions among predicted subscriptions | Indicates how many targeted calls are likely to succeed |
+| Recall | Correctly detected subscribers among all actual subscribers | Indicates how many potential subscribers are found |
+| F1 | Harmonic mean of precision and recall | Balances the two positive-class objectives |
+| MCC | Correlation between actual and predicted classes | Robust single score for the strongly imbalanced target |
+
 ### Comparison table (test set, 8,238 rows)
 
 | ML Model Name | Accuracy | AUC | Precision | Recall | F1 | MCC |
@@ -104,14 +144,29 @@ All five models are scikit-learn pipelines (preprocessing + classifier) trained 
 
 ## Streamlit app features
 
-- **CSV upload** of test data (plus a button to download the bundled `test_data.csv`, and a checkbox to use it directly)
+- **CSV upload** of test data, a bundled sample-data toggle and sample CSV download
 - **Model selection dropdown** for the five classifiers
 - **Evaluation metrics:** Accuracy, AUC, Precision, Recall, F1, MCC
-- **Confusion matrix**, **ROC curve** and **classification report**
-- **Compare all models** tab with a highlighted metric table and bar chart
-- Download of per-row predictions and subscription probabilities
+- **Confusion matrix**, **ROC curve**, **precision-recall curve** and **classification report**
+- **Compare all models** view with ranking controls, leaderboard, heat map and head-to-head chart
+- **Test-data inspection** with schema checks, class balance and feature summaries
+- **Light and dark themes** with a responsive desktop/mobile layout
+- Downloads for the sample data, per-row predictions and model comparison table
 
 The app only loads the saved `.joblib` pipelines and calls `predict` / `predict_proba`; it never retrains on uploaded data.
+
+### Test CSV contract
+
+An uploaded CSV must contain all 19 columns listed under **Features used**, plus the target column `y`. The target accepts `yes`/`no` or `1`/`0`. Column names are normalised by replacing dots with underscores. Extra columns, including `duration`, are ignored. Unknown categorical values are accepted by the fitted one-hot encoder.
+
+### Using the live app
+
+1. Open the [deployed Streamlit application](https://bank-marketing-classifier-2026aj05033.streamlit.app/).
+2. Keep **Use bundled test_data.csv** enabled for the supplied hold-out set, or upload another compatible test CSV.
+3. Select a classifier in the sidebar.
+4. Select the ranking metric, with MCC recommended for this imbalanced dataset.
+5. Review the selected-model diagnostics or compare all five models.
+6. Download row-level predictions or the comparison table when required.
 
 ## How to run locally
 
@@ -122,3 +177,40 @@ streamlit run app.py
 ```
 
 > Saved `.joblib` models must be loaded with the same scikit-learn version they were trained with. If you retrain with a different version, update the `scikit-learn==` line in `requirements.txt` to match.
+
+## Reproducibility and deployment
+
+- Package versions are pinned in `requirements.txt`, including the scikit-learn version used by the saved pipelines.
+- `random_state=42` is used for the train/test split, cross-validation and applicable estimators.
+- Every model receives the same training and held-out test rows.
+- Preprocessing is stored inside each fitted pipeline, so training and inference use identical transformations.
+- The app is deployed from the public `main` branch. Commits pushed to `main` trigger a Community Cloud redeployment.
+- Streamlit Community Cloud may briefly wake an inactive free-tier app on first access. Refreshing the same public URL starts it automatically.
+
+## Assignment requirement checklist
+
+| Instructor requirement | Status | Evidence |
+|---|---|---|
+| Public classification dataset with at least 12 features and 500 instances | Complete | UCI dataset, 19 used features, 41,188 records |
+| Five required classifiers | Complete | Five saved pipelines under `model/` |
+| Accuracy, AUC, Precision, Recall, F1 and MCC | Complete | README table, `metrics.json` and live app |
+| Experimental test CSV | Complete | `test_data.csv`, 8,238 held-out rows |
+| Model selection dropdown | Complete | Sidebar classifier control |
+| Test CSV upload | Complete | Sidebar CSV uploader |
+| Confusion matrix or classification report | Complete | Both are included |
+| Saved-model inference without retraining | Complete | `joblib.load`, `predict` and `predict_proba` only |
+| Public GitHub repository | Complete | Linked at the top of this README |
+| Public Streamlit application | Complete | Linked at the top of this README |
+
+## Repository contents
+
+- `app.py` - interactive Streamlit evaluation dashboard
+- `preprocess.py` - shared cleaning, feature engineering and preprocessing pipeline
+- `model/train_models.py` - training, tuning, evaluation and artifact generation
+- `model/*.joblib` - five fitted scikit-learn pipelines
+- `model/metrics.json` - full-precision held-out metrics and tuned parameters
+- `model/metrics_table.md` - generated model-comparison table
+- `test_data.csv` - held-out experimental test set used by the app
+- `data/bank_marketing.csv` - complete source dataset
+- `.streamlit/config.toml` - Streamlit theme configuration
+- `requirements.txt` - pinned runtime dependencies
