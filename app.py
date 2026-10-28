@@ -178,11 +178,17 @@ st.html(
     .chip {{display:inline-flex; align-items:center; gap:.3rem; font-size:.76rem; font-weight:600; padding:.25rem .6rem;
         border-radius:999px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18);}}
     .chip .msr {{color:var(--sky);}}
-    .student {{position:relative; z-index:1; min-width:240px; background:rgba(255,255,255,.07); border:1px solid rgba(242,207,91,.4);
-        border-radius:10px; padding:.85rem 1rem;}}
-    .student span {{display:block; color:var(--sun); font-size:.68rem; text-transform:uppercase; letter-spacing:.1em; margin-bottom:.2rem;}}
-    .student strong {{display:block; font-size:1.08rem;}}
-    .student small {{display:flex; gap:.3rem; align-items:center; color:#C9CBE6; margin-top:.25rem;}}
+    .student {{position:relative; z-index:1; min-width:260px;
+        background:linear-gradient(135deg, rgba(255,255,255,.13), rgba(255,255,255,.05));
+        border:1px solid rgba(242,207,91,.55); border-left:4px solid var(--sun);
+        border-radius:10px; padding:1rem 1.1rem; box-shadow:0 8px 22px rgba(8,10,55,.22);}}
+    .student span {{display:block; color:var(--sun); font-size:.68rem; font-weight:700;
+        text-transform:uppercase; letter-spacing:.12em; margin-bottom:.3rem;}}
+    .student strong {{display:block; color:#fff; font-size:1.3rem; font-weight:800; line-height:1.2;
+        padding-bottom:.55rem; margin-bottom:.45rem; border-bottom:1px solid rgba(255,255,255,.2);}}
+    .student small {{display:flex; gap:.35rem; align-items:center; color:#C9CBE6; font-size:.78rem; margin-top:.3rem;}}
+    .student small:first-of-type {{color:#fff; font-weight:700;}}
+    .student small .msr {{color:var(--sun);}}
 
     /* progress stepper */
     .stepper-wrap {{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:1rem 1.2rem .9rem; margin-bottom:1rem;}}
