@@ -1,0 +1,73 @@
+{
+  "metrics": {
+    "Logistic Regression": {
+      "Accuracy": 0.8248361252731246,
+      "AUC": 0.7934067497287608,
+      "Precision": 0.3468173706127305,
+      "Recall": 0.6282327586206896,
+      "F1": 0.44691452663855885,
+      "MCC": 0.3750154534085046
+    },
+    "Decision Tree": {
+      "Accuracy": 0.8380674921097354,
+      "AUC": 0.7756744864144535,
+      "Precision": 0.3650265957446808,
+      "Recall": 0.5915948275862069,
+      "F1": 0.45148026315789475,
+      "MCC": 0.37724872980114516
+    },
+    "KNN": {
+      "Accuracy": 0.8942704539936878,
+      "AUC": 0.7414708535779988,
+      "Precision": 0.5703703703703704,
+      "Recall": 0.24892241379310345,
+      "F1": 0.34658664666166544,
+      "MCC": 0.32919560803238995
+    },
+    "Naive Bayes": {
+      "Accuracy": 0.8664724447681476,
+      "AUC": 0.775003759021652,
+      "Precision": 0.41365461847389556,
+      "Recall": 0.44396551724137934,
+      "F1": 0.4282744282744283,
+      "MCC": 0.3530730370405526
+    },
+    "Support Vector Machine": {
+      "Accuracy": 0.8976693372177713,
+      "AUC": 0.7918751326713525,
+      "Precision": 0.6591760299625468,
+      "Recall": 0.1896551724137931,
+      "F1": 0.29456066945606696,
+      "MCC": 0.3163735885627911
+    }
+  },
+  "best_params": {
+    "Logistic Regression": {
+      "C": 1.0,
+      "class_weight": "balanced"
+    },
+    "Decision Tree": {
+      "class_weight": "balanced",
+      "max_depth": 5,
+      "min_samples_leaf": 20
+    },
+    "KNN": {
+      "n_neighbors": 11,
+      "weights": "uniform"
+    },
+    "Naive Bayes": {
+      "var_smoothing": 0.01
+    },
+    "Support Vector Machine": {
+      "C": 0.01,
+      "class_weight": null
+    }
+  },
+  "model_files": {
+    "Logistic Regression": "logistic_regression.joblib",
+    "Decision Tree": "decision_tree.joblib",
+    "KNN": "knn.joblib",
+    "Naive Bayes": "naive_bayes.joblib",
+    "Support Vector Machine": "svm.joblib"
+  }
+}
